@@ -1,3 +1,7 @@
+"""
+URL-SHORTENER V0
+"""
+
 import json
 import uvicorn
 from fastapi import FastAPI, Request, Form
@@ -83,5 +87,5 @@ async def home(request: Request):
 
 
 if __name__ == "__main__":
-    print('Versión 0')
+    print('V0')
     uvicorn.run("app:app", host=HOST, port=PORT, reload=True)
