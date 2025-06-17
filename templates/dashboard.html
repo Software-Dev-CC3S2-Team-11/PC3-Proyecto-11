@@ -9,5 +9,31 @@
 </head>
 
 <body class="items-center justify-center flex h-screen bg-gray-100">
+    <div class="flex flex-col bg-white shadow-md rounded-md bg-white p-6 w-6xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4">Dashboard de {{ username }}</h1>
 
+        <div>
+            <table class="min-w-full bg-white shadow rounded-sm overflow-hidden">
+                <thead class="bg-gray-200 text-left">
+                    <tr>
+                        <th>Original URL</th>
+                        <th>Short URL</th>
+                        <th>Visitas:</th>
+                        <th>Fecha de Creación:</th>
+                        <th>Expiración:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-t-gray-200">
+                        <td><a class="text-blue-600" href="{{ u.original_url }}">{{ u.original_url }}</a></td>
+                        <td><a class="text-blue-600" href="/{{ u.slug }}">{{ u.short_url }}</a></td>
+                        <td>{{ u.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ u.expires_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ u.visits }}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
