@@ -4,19 +4,19 @@ from typing import Dict, List, Optional
 
 class URLData:
     """
-    Represents a shortened URL with its metadata.
-    This class is designed to store information about a shortened URL,
-    including the original URL, a unique slug, the owner of the URL,
-    the creation time, the expiration time, and the number of visits.
+    Representa una URL acortada con sus metadatos.
+    Esta clase está diseñada para almacenar información sobre una URL acortada,
+    incluyendo la URL original, un slug único, el propietario de la URL,
+    la hora de creación, la hora de expiración y el número de visitas.
     """
     def __init__(self, original: str, slug: str, owner: str,
                  lifespan_days: int = 2):
         """
-        Initializes a URLData instance.
-        :param original: The original URL to be shortened.
-        :param slug: The unique slug for the shortened URL.
-        :param owner: The owner of the shortened URL.
-        :param lifespan_days: The remaining time in which the shortened URL is valid.
+        Inicia una instancia de URLData.
+        :param original: La URL original que se acortará.
+        :param slug: El slug único para la URL acortada.
+        :param owner: El propietario de la URL acortada.
+        :param lifespan_days: El número de días que la URL acortada será válida.
         """
         self.original_url = original
         self.slug = slug
@@ -27,26 +27,26 @@ class URLData:
 
     def increment_visits(self):
         """
-        Increments the visit count for the shortened URL.
-        This method is used to track how many times the shortened URL has been accessed.
+        Incrementa el contador de visitas para la URL acortada.
+        Este método se utiliza para rastrear cuántas veces se ha accedido a la URL acortada.
         """
         self.visits += 1 
 
 
 class URLDatabase:
     """
-    A simple singleton in-memory database for storing URLData objects.
-    This class provides methods to add, retrieve, and filter URLs based on their owner.
-    This class is designed as a dummy in-memory database for demonstration purposes.
-
+    Una base de datos en memoria para almacenar objetos URLData.
+    Esta clase proporciona métodos para añadir, recuperar y filtrar URLs
+    basados en su propietario.
+    Esta clase está diseñada como una base de datos en memoria para fines de demostración.
     """
     instance = None
     _urls: Dict[str, URLData] = {}
 
     def __new__(cls, *args, **kwargs):
         """
-        Ensures that only one instance of URLDatabase is created (Singleton pattern).
-        :return: The singleton instance of URLDatabase.
+        Asegura que una instancia de URLData exista a la vez (Patrón Singleton).
+        :return: La instancia Singleton de URLDatabase.
         """
         if not isinstance(cls._instance, cls):
             cls._instance = super().__new__(cls, *args, **kwargs)
@@ -54,24 +54,26 @@ class URLDatabase:
 
     def add(self, item: URLData):
         """
-        Adds a URLData item to the in-memory database.
-        :param item: The URLData instance to be added.
+        Añade un elemento URLData a la base de datos en memoria.
+        :param item: La instancia de URLData para ser añadido.
         """
         self._urls[item.slug] = item
 
     def get(self, slug: str) -> Optional[URLData]:
         """
-        Retrieves a URLData item by its slug.
-        :param slug: The unique slug of the shortened URL.
-        :return: The URLData instance if found, otherwise None.
+        Recuperar una instancia de URLData por su slug.
+        :param slug: La parte única de la URL acortada.
+        :return: La instancia de URLData si se encuentra, de lo contrario None.
         """
+        if not slug:
+            return None
         return self._urls.get(slug)
 
     def by_owner(self, owner: str) -> List[URLData]:
         """
-        Retrieves all URLData items owned by a specific owner.
-        :param owner: The owner of the shortened URLs.
-        :return: A list of URLData instances owned by the specified owner.
+        Recupera todos los elementos URLData que pertenecen a un propietario específico.
+        :param owner: El propietario de las URL acortadas.
+        :return: Una lista de instancias URLData que pertenecen al propietario especificado.
         """
         if not owner:
             return []
