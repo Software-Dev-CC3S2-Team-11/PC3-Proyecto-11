@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
+
 class URLData:
     """
     Represents a shortened URL with its metadata.
