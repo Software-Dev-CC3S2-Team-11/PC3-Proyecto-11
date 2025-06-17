@@ -14,7 +14,7 @@ app = FastAPI()
 
 
 def read_config():
-    with open("config.json") as f:
+    with open("../config.json") as f:
         config = json.load(f)
         return config
 
@@ -24,8 +24,8 @@ config = read_config()
 HOST, PORT = config["HOST"], config["PORT"]
 
 # Renderiza los html usando Jinja2
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="../static"), name="static")
+templates = Jinja2Templates(directory="../templates")
 
 
 # urls acortadas para simular una base de datos
