@@ -1,7 +1,5 @@
-"""
-URL-SHORTENER V0
-"""
-
+import argparse
+import sys
 import json
 import uvicorn
 from fastapi import FastAPI, Request, Form
@@ -18,6 +16,8 @@ from os import getenv
 load_dotenv()
 
 SESSION_SECRET = getenv('SESSION_SECRET')
+
+VERSION = "-0"
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET)
@@ -156,6 +156,34 @@ async def redirect_url(slug: str):
     return {"error": "url not found"}
 
 
+def cli() -> bool:
+    """
+    Parsea CLI flags antes de ejecutar el servidor.
+    :return: True si se pasan argumentos de línea de comandos,
+             False si no se pasan argumentos.
+    """
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--status", action="store_true", help="Verifica si el servidor está corriendo")
+    parser.add_argument("--version", action="store_true", help="Muestra la versión del servidor")
+
+    args, _ = parser.parse_known_args()
+
+    if args.status:
+        print("OK")
+        return True
+
+    if args.version:
+        print(VERSION)
+        return True
+    return False
+
+
 if __name__ == "__main__":
-    print('V0')
+    """
+    Ejecuta el servidor uvicorn, si es que no se pasan
+    argumentos de línea de comandos.
+    """
+    if cli():
+        sys.exit(0)
+
     uvicorn.run("app:app", host=HOST, port=PORT, reload=True)
