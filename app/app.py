@@ -1,13 +1,12 @@
 import argparse
+from pathlib import Path
 import sys
-import json
 import uvicorn
 from database.db import get_db
 from sqlalchemy.orm import Session
 from fastapi import Depends
 from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from routes.auth import router as auth_router
 from services.auth import verify_token
@@ -19,6 +18,7 @@ from routes.url import router as url_router
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.requests import Request
 
+
 load_dotenv()
 
 SESSION_SECRET = getenv('SESSION_SECRET')
@@ -28,9 +28,10 @@ VERSION = "-0"
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET)
 app.include_router(auth_router)
-# Renderiza los html usando Jinja2
-app.mount("/static", StaticFiles(directory="../static"), name="static")
-templates = Jinja2Templates(directory="../templates")
+
+# Path de la raiz del proyecto
+BASE_DIR = Path(__file__).resolve().parent.parent
+templates = Jinja2Templates(directory=BASE_DIR/"templates")
 
 
 @app.get('/register', response_class=HTMLResponse)
@@ -104,8 +105,15 @@ def cli() -> bool:
              False si no se pasan argumentos.
     """
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument("--status", action="store_true", help="Verifica si el servidor está corriendo")
-    parser.add_argument("--version", action="store_true", help="Muestra la versión del servidor")
+
+    parser.add_argument(
+        "--status", action="store_true",
+        help="Verifica si el servidor está corriendo"
+    )
+    parser.add_argument(
+        "--version", action="store_true",
+        help="Muestra la versión del servidor"
+    )
 
     args, _ = parser.parse_known_args()
 
