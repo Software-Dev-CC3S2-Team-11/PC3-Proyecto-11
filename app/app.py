@@ -1,6 +1,5 @@
 import argparse
 import sys
-import json
 import uvicorn
 from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
@@ -14,6 +13,8 @@ from core.settings import HOST, PORT
 from routes.url import router as url_router
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.requests import Request
+from pathlib import Path
+
 
 load_dotenv()
 
@@ -24,9 +25,13 @@ VERSION = "-0"
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET)
 app.include_router(auth_router)
+
+# Path de la raiz del proyecto
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 # Renderiza los html usando Jinja2
-app.mount("/static", StaticFiles(directory="../static"), name="static")
-templates = Jinja2Templates(directory="../templates")
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
+templates = Jinja2Templates(directory=BASE_DIR/"templates")
 
 
 @app.get('/register', response_class=HTMLResponse)
@@ -85,6 +90,7 @@ async def dashboard(request: Request):
 
 app.include_router(url_router)
 
+
 def cli() -> bool:
     """
     Parsea CLI flags antes de ejecutar el servidor.
@@ -92,8 +98,14 @@ def cli() -> bool:
              False si no se pasan argumentos.
     """
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument("--status", action="store_true", help="Verifica si el servidor está corriendo")
-    parser.add_argument("--version", action="store_true", help="Muestra la versión del servidor")
+    parser.add_argument(
+        "--status", action="store_true",
+        help="Verifica si el servidor está corriendo"
+    )
+    parser.add_argument(
+        "--version", action="store_true",
+        help="Muestra la versión del servidor"
+    )
 
     args, _ = parser.parse_known_args()
 
