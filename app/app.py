@@ -14,6 +14,7 @@ from routes.url import router as url_router
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.requests import Request
 
+
 load_dotenv()
 
 SESSION_SECRET = getenv('SESSION_SECRET')
@@ -24,8 +25,8 @@ app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET)
 app.include_router(auth_router)
 
-# app.mount("/static", StaticFiles(directory="../static"), name="static")
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+# Path de la raiz del proyecto
+BASE_DIR = Path(__file__).resolve().parent.parent
 templates = Jinja2Templates(directory=BASE_DIR/"templates")
 
 
@@ -93,10 +94,15 @@ def cli() -> bool:
              False si no se pasan argumentos.
     """
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument("--status", action="store_true",
-                        help="Verifica si el servidor está corriendo")
-    parser.add_argument("--version", action="store_true",
-                        help="Muestra la versión del servidor")
+
+    parser.add_argument(
+        "--status", action="store_true",
+        help="Verifica si el servidor está corriendo"
+    )
+    parser.add_argument(
+        "--version", action="store_true",
+        help="Muestra la versión del servidor"
+    )
 
     args, _ = parser.parse_known_args()
 
