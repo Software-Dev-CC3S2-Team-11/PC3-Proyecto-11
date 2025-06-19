@@ -6,13 +6,13 @@ from fastapi.responses import RedirectResponse
 from fastapi import Request, Form, Depends
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, HTTPException
-from services.shorter_url import get_by_shorter_url, insert_shorter_url, increment_visits_url, build_url_entity
+from services.shorter_url import get_by_shorter_url, insert_shorter_url
+from services.shorter_url import increment_visits_url, build_url_entity
 from services.auth import verify_token
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory="../templates")
-
 
 
 @router.post('/shorter', response_class=HTMLResponse)
@@ -48,7 +48,7 @@ async def generated_url(request: Request, url: str = Form(...),
         "created_at": url_from_db.created_at,
         "expires_at": url_from_db.expires_at,
         "visits": url_from_db.visits,
-        "username":username
+        "username": username
     })
 
 
@@ -58,19 +58,16 @@ async def home(request: Request):
     Renderiza la página principal donde
     se encuentra el formulario que enviará
     el url original
-    """    
-    
+    """
     token = request.session.get('token')
     username = 'unknown'
-
     if token:
         payload = verify_token(token)
         username = payload.get("username")
-    
     return templates.TemplateResponse('index.html', {
         "request": request, "username": username
     })
-    
+
 
 @router.get('/{slug}')
 async def redirect_url(slug: str, db: Session = Depends(get_db)):
@@ -89,5 +86,3 @@ async def redirect_url(slug: str, db: Session = Depends(get_db)):
 
     increment_visits_url(db=db, slug=slug)
     return RedirectResponse(original_url)
-
-
