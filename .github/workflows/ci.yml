@@ -10,6 +10,12 @@ jobs:
   run-ci-script:
     runs-on: ubuntu-latest
 
+    env:
+      SECRET_KEY: ${{secrets.SECRET_KEY}}
+      ALGORITHM: ${{secrets.ALGORITHM}}
+      SESSION_SECRET: ${{secrets.SESSION_SECRET}}
+      URL: ${{secrets.URL}}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
