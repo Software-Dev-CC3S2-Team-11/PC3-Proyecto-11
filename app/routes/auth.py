@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import RedirectResponse
 from starlette import status
@@ -7,8 +8,7 @@ from sqlalchemy.orm import Session
 from models.User import User
 import services.auth as auth_service
 from pathlib import Path
-from sqlalchemy.exc import IntegrityError
-from fastapi.responses import HTMLResponse
+
 
 router = APIRouter(
     prefix='/auth',
@@ -32,13 +32,9 @@ async def register_user(request: Request, email: str = Form(...),
     hashed_password = auth_service.bcrypt_context.hash(password)
     new_user = User(email=email, password=hashed_password, username=username)
 
-    try:
-        db.add(new_user)
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        return HTMLResponse(content="El usuario ya existe", status_code=400)
-
+    db.add(new_user)
+    db.commit()
+    
     token = auth_service.create_access_token(email=email, username=username)
     request.session['token'] = token
 
@@ -61,9 +57,9 @@ async def login_user(
     user = db.query(User).filter(User.email == email).first()
     if not user or not auth_service.bcrypt_context.verify(password,
                                                           user.password):
-        return templates.TemplateResponse(
-            "login.html", {"request": request, "error": "Invalid credentials"}
-        )
+        return templates.TemplateResponse("login.html",
+                                          {"request": request,
+                                           "error": "Invalid credentials"})
 
     token = auth_service.create_access_token(user.email, user.username)
     request.session["token"] = token
@@ -76,6 +72,5 @@ async def logout_user(request: Request):
     Cierra la sesión del usuario eliminando el token de la sesión.
     Redirige al usuario a la página de inicio de sesión.
     """
-
     request.session.clear()
     return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)

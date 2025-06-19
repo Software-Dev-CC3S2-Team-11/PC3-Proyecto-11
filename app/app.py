@@ -1,9 +1,9 @@
 import argparse
+from pathlib import Path
 import sys
 import uvicorn
 from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from routes.auth import router as auth_router
 from services.auth import verify_token
@@ -28,9 +28,6 @@ app.include_router(auth_router)
 
 # Path de la raiz del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Renderiza los html usando Jinja2
-app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR/"templates")
 
 
@@ -98,6 +95,7 @@ def cli() -> bool:
              False si no se pasan argumentos.
     """
     parser = argparse.ArgumentParser(add_help=False)
+
     parser.add_argument(
         "--status", action="store_true",
         help="Verifica si el servidor está corriendo"
@@ -106,6 +104,7 @@ def cli() -> bool:
         "--version", action="store_true",
         help="Muestra la versión del servidor"
     )
+
 
     args, _ = parser.parse_known_args()
 
