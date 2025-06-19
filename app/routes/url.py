@@ -48,7 +48,7 @@ async def generated_url(request: Request, url: str = Form(...),
         "created_at": url_from_db.created_at,
         "expires_at": url_from_db.expires_at,
         "visits": url_from_db.visits,
-        "username":username
+        "username": username
     })
 
 
