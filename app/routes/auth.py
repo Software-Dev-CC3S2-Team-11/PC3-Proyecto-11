@@ -7,7 +7,6 @@ from database.db import get_db
 from sqlalchemy.orm import Session
 from models.User import User
 import services.auth as auth_service
-from pathlib import Path
 
 
 router = APIRouter(
@@ -34,7 +33,7 @@ async def register_user(request: Request, email: str = Form(...),
 
     db.add(new_user)
     db.commit()
-    
+
     token = auth_service.create_access_token(email=email, username=username)
     request.session['token'] = token
 

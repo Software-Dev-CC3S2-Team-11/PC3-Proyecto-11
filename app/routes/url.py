@@ -23,7 +23,6 @@ templates = Jinja2Templates(directory=BASE_DIR/"templates")
 async def generated_url(
     request: Request, url: str = Form(...), db: Session = Depends(get_db)
 ):
-
     """
     Toma la url enviada desde el form del index,
     genera un slug único, almacena los datos
@@ -62,7 +61,6 @@ async def generated_url(
     )
 
 
-
 @router.get('/')
 async def home(request: Request):
     """
@@ -76,7 +74,7 @@ async def home(request: Request):
     if token:
         payload = verify_token(token)
         username = payload.get("username")
-        
+
     return templates.TemplateResponse(request, 'index.html', {
         "request": request, "username": username
     })

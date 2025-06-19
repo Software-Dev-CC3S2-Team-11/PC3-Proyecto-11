@@ -13,7 +13,6 @@ from core.settings import HOST, PORT
 from routes.url import router as url_router
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.requests import Request
-from pathlib import Path
 
 
 load_dotenv()
@@ -104,7 +103,6 @@ def cli() -> bool:
         "--version", action="store_true",
         help="Muestra la versión del servidor"
     )
-
 
     args, _ = parser.parse_known_args()
 
