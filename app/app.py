@@ -23,7 +23,7 @@ load_dotenv()
 
 SESSION_SECRET = getenv('SESSION_SECRET')
 
-VERSION = "-1.1.0"
+VERSION = "-1.0.1"
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET)
