@@ -19,6 +19,6 @@ flake8 app/ --max-line-length=88 --exclude=venv,__pycache__,compare_workflows.py
 
 #Ejecuta pytest y verifica que la cobertura sea mayor al 80%
 echo "Running pytest with coverage " | tee -a "$LOG_FILE"
-pytest --cov=. --cov-fail-under=80 >> "$LOG_FILE"
+pytest --cov=. --cov-fail-under=80  >> "$LOG_FILE"
 
 echo "All tests passed" | tee -a "$LOG_FILE"
