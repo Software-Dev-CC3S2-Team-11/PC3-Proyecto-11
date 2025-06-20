@@ -1,5 +1,6 @@
 fastapi
-uvicorn[standard]
+dotenv
+uvicorn
 jinja2
 pydantic
 pytest
