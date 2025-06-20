@@ -5,6 +5,10 @@
 FILE="config.json"
 if [ -f "$FILE" ]; then
   echo "El archivo $FILE existe"
+  python -m venv .venv
+  source .venv/bin/activate
+  pip install -r requirements.txt
+  cd app/
   python app.py
   exit 0
 fi
